@@ -57,6 +57,7 @@ dependencies {
             project(":domain"),
             project(":cache"),
             project(":core"),
+            project(":provider"),
 
     )
     kapt appDependencies.daggerCompiler

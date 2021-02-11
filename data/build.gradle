@@ -17,6 +17,7 @@ dependencies {
             dataDependencies.appDependencies.kotlin,
             dataDependencies.appDependencies.javax,
             dataDependencies.appDependencies.coroutines,
+            dataDependencies.remoteDependencies.gson,
 
             project(':domain')
     )

@@ -1,12 +1,12 @@
 package com.example.cache.models
 
 data class SortingValuesCacheModel(
-    val bestMatch: Int,
-    val newest: Int,
-    val ratingAverage: Int,
-    val distance: Int,
-    val popularity: Int,
-    val averageProductPrice: Int,
-    val deliveryCosts: Int,
-    val minCost: Int
+    val bestMatch: Double,
+    val newest: Double,
+    val ratingAverage: Double,
+    val distance: Double,
+    val popularity: Double,
+    val averageProductPrice: Double,
+    val deliveryCosts: Double,
+    val minCost: Double
 )

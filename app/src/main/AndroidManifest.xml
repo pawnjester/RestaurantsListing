@@ -10,7 +10,9 @@
         android:supportsRtl="true"
         android:name=".ApplicationClass"
         android:theme="@style/Theme.RestaurantsListing">
-        <activity android:name="com.example.restaurants.MainActivity">
+        <activity android:name="com.example.restaurants.MainActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

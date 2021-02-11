@@ -70,6 +70,7 @@ dependencies {
             project(":domain"),
             project(":data"),
             project(":cache"),
+            project(":provider"),
     )
 
     kapt presentationDependencies.appDependencies.daggerXcompiler

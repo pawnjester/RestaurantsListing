@@ -1,3 +1,4 @@
+include ':provider'
 include ':restaurants'
 include ':domain'
 include ':data'

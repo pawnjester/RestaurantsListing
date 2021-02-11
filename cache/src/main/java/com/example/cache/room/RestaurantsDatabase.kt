@@ -4,7 +4,9 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 import com.example.cache.models.RestaurantsCacheModel
+import com.example.cache.room.converters.Converter
 
 @Database(
     entities = [
@@ -12,6 +14,7 @@ import com.example.cache.models.RestaurantsCacheModel
     version = 1,
     exportSchema = false
 )
+@TypeConverters(Converter::class)
 abstract class RestaurantsDatabase : RoomDatabase() {
 
     abstract fun restaurantsDao(): RestaurantsDao

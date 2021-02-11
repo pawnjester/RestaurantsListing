@@ -1,5 +1,5 @@
 package com.example.restaurants.utils
 
-import com.example.restaurants.models.RestaurantModel
+import com.example.domain.model.Restaurant
 
-typealias FavoriteRestaurantsCallback = (RestaurantModel) -> Unit
+typealias FavoriteRestaurantsCallback = (Restaurant) -> Unit

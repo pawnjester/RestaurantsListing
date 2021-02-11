@@ -3,8 +3,8 @@ package com.example.restaurants.adapters.viewHolders
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.example.domain.model.Restaurant
 import com.example.restaurants.databinding.ItemRestaurantsBinding
-import com.example.restaurants.models.RestaurantModel
 import com.example.restaurants.utils.FavoriteRestaurantsCallback
 
 class RestaurantsViewHolder(
@@ -12,7 +12,7 @@ class RestaurantsViewHolder(
     private val favoriteRestaurantsCallback: FavoriteRestaurantsCallback
 ) : RecyclerView.ViewHolder(binding.root) {
 
-    fun bind(item: RestaurantModel) {
+    fun bind(item: Restaurant) {
         item.run {
             binding.restaurantsName.text = item.name
             binding.restaurantsStatus.text = item.status

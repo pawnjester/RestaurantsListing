@@ -47,6 +47,7 @@ dependencies {
             cacheDependencies.appDependencies.javax,
 
             cacheDependencies.roomDependencies.roomDB,
+            cacheDependencies.remoteDependencies.gson,
 
             project(':data')
     )
