@@ -1,0 +1,23 @@
+plugins {
+    id 'java-library'
+    id 'kotlin'
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_7
+    targetCompatibility = JavaVersion.VERSION_1_7
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    def dataDependencies = rootProject.ext
+
+    implementation(
+            dataDependencies.appDependencies.kotlin,
+            dataDependencies.appDependencies.javax,
+            dataDependencies.appDependencies.coroutines,
+
+            project(':domain')
+    )
+}

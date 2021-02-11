@@ -1,0 +1,7 @@
+include ':restaurants'
+include ':domain'
+include ':data'
+include ':core'
+include ':cache'
+include ':app'
+rootProject.name = "RestaurantsListing"
