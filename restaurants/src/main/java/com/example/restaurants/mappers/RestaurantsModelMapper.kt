@@ -1,4 +1,7 @@
 package com.example.restaurants.mappers
 
-class RestaurantsModelMapper {
-}
+import javax.inject.Inject
+
+class RestaurantsModelMapper @Inject constructor(
+
+)

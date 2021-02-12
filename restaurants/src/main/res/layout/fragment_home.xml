@@ -14,6 +14,7 @@
         android:layout_marginTop="8dp"
         android:textColor="@color/colorTundora"
         android:textSize="20sp"
+        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="Welcome!" />
@@ -26,6 +27,7 @@
         android:layout_marginTop="8dp"
         android:textColor="@color/colorTundora"
         android:textSize="16sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/header"
@@ -39,6 +41,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
+        android:drawablePadding="8dp"
         android:background="@drawable/bg_search_edit_text"
         android:drawableStart="@drawable/ic_search"
         android:hint="@string/search_restaurants_by_name"
@@ -56,6 +59,34 @@
         app:layout_constraintTop_toTopOf="@+id/search_restaurants_edit_text"
         app:srcCompat="@drawable/ic_filter" />
 
+    <LinearLayout
+        android:id="@+id/sort_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:orientation="vertical"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/search_restaurants_edit_text">
+
+        <TextView
+            android:id="@+id/sort_by_header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/sort_by_text"
+            android:textColor="@color/colorTundora"
+            android:textStyle="bold" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_sort"
+            android:layout_width="match_parent"
+            android:layout_height="70dp" />
+
+    </LinearLayout>
+
     <View
         android:id="@+id/divider"
         android:layout_width="match_parent"
@@ -64,14 +95,14 @@
         android:background="@color/colorPrimary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/search_restaurants_edit_text" />
+        app:layout_constraintTop_toBottomOf="@+id/sort_layout" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_restaurants"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="16dp"
-        app:layout_constraintTop_toBottomOf="@+id/divider"
-        android:paddingBottom="180dp"/>
+        android:paddingBottom="180dp"
+        app:layout_constraintTop_toBottomOf="@+id/divider" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

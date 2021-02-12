@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.domain.model.Restaurant
+import com.example.restaurants.R
 import com.example.restaurants.databinding.ItemRestaurantsBinding
 import com.example.restaurants.utils.FavoriteRestaurantsCallback
 
@@ -14,13 +15,26 @@ class RestaurantsViewHolder(
 
     fun bind(item: Restaurant) {
         item.run {
-            binding.restaurantsName.text = item.name
-            binding.restaurantsStatus.text = item.status
-            binding.restaurantsAveragePrice.text = item.sortingValues.averageProductPrice.toString()
+            binding.restaurantsName.text = name
+            binding.restaurantsStatus.text = status
+            binding.restaurantsAveragePrice.text = sortingValues.averageProductPrice.toString()
+            binding.restaurantsStatus.setTextColor(setStatusColor(item.status))
         }
-
         binding.favoriteRestaurants.setOnClickListener { favoriteRestaurantsCallback.invoke(item) }
+    }
 
+    private fun setStatusColor(status: String): Int {
+        return when (status) {
+            Restaurant.CLOSED -> {
+                itemView.resources.getColor(R.color.colorPrimaryDark, null)
+            }
+            Restaurant.OPEN -> {
+                itemView.resources.getColor(R.color.colorAccent, null)
+            }
+            else -> {
+                itemView.resources.getColor(R.color.colorTundora, null)
+            }
+        }
     }
 
     companion object {

@@ -9,4 +9,8 @@ data class SortingValues(
     val averageProductPrice: Double,
     val deliveryCosts: Double,
     val minCost: Double
-)
+) {
+    companion object {
+
+    }
+}
