@@ -10,9 +10,7 @@ interface RestaurantsRepository {
 
     suspend fun favoriteRestaurant(restaurant: Restaurant)
 
-    suspend fun removeRestaurant(name: String)
+    suspend fun removeRestaurant(restaurant: Restaurant)
 
-    fun sortRestaurants(option: String) : Flow<Result>
-
-    fun filterRestaurants(name: String) : Flow<Result>
+    fun getAllFavoriteRestaurants() : Flow<Result>
 }

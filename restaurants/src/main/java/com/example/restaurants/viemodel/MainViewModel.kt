@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.domain.model.Restaurant
 import com.example.domain.usecases.DeleteRestaurantUseCase
 import com.example.domain.usecases.FavoriteRestaurantsUseCase
+import com.example.domain.usecases.GetAllUsersFavoriteUseCase
 import com.example.domain.usecases.GetRestaurantsUseCase
 import com.example.restaurants.models.SortOption
 import com.example.restaurants.models.SortOption.Companion.AVERAGE_PRODUCT_PRICE
@@ -17,49 +18,73 @@ import com.example.restaurants.models.SortOption.Companion.MINIMUM_COST
 import com.example.restaurants.models.SortOption.Companion.NEWEST
 import com.example.restaurants.models.SortOption.Companion.POPULARITY
 import com.example.restaurants.models.SortOption.Companion.RATING_AVERAGE
+import com.example.restaurants.utils.toArrayList
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import java.util.*
+import kotlin.collections.set
 
 class MainViewModel @ViewModelInject constructor(
     private val getRestaurantsCase: GetRestaurantsUseCase,
     private val favoriteRestaurantCase: FavoriteRestaurantsUseCase,
-    private val removeRestaurantCase: DeleteRestaurantUseCase
+    private val removeRestaurantCase: DeleteRestaurantUseCase,
+    private val favoriteAllRestaurantsUseCase: GetAllUsersFavoriteUseCase
 ) : ViewModel() {
 
 
     private val _restaurants = MutableLiveData<LatestUiState>()
     var restaurantsResult: LiveData<LatestUiState> = _restaurants
 
-    private var sortItem: SortOption? = null
-    private var restaurants = mutableListOf<Restaurant>()
+    var restaurants = mutableListOf<Restaurant>()
 
-    fun setSortItemValue(item: SortOption) {
-        sortItem = item
-
-    }
-
-    fun setRestaurantsList(list: List<Restaurant>) {
-        restaurants.addAll(list)
-    }
+    private val _restaurantsData = MutableLiveData<Pair<SortOption, List<Restaurant>>>()
+    var restaurantsDataResult: LiveData<Pair<SortOption, List<Restaurant>>> = _restaurantsData
 
 
     fun getRestaurants() {
         viewModelScope.launch {
-            getRestaurantsCase().collect {
-                _restaurants.value = LatestUiState.Success(it.restaurant)
-            }
+            getRestaurantsCase()
+                .collect {
+                    restaurants.addAll(it.restaurant)
+                }
         }
     }
 
-    fun favoriteRestaurants(restaurants: Restaurant) {
+    fun getAllUsersRestaurants() {
         viewModelScope.launch {
-            if (restaurants.isFavorite) {
-                val removeRecipe = restaurants.copy(isFavorite = false)
-                removeRestaurantCase(removeRecipe.name)
+            favoriteAllRestaurantsUseCase()
+                .collect {
+                    val favorites = it.restaurant.toArrayList()
+                    favorites.addAll(restaurants)
+                    val response = removeDuplicates(favorites)
+                    restaurants.clear()
+                    restaurants.addAll(response)
+                    _restaurants.value = LatestUiState.Success(response)
+                    _restaurantsData.value = Pair(SortOption(BEST_MATCH), sortListByOption(response, SortOption(BEST_MATCH)))
+                }
+        }
+    }
+
+    private fun removeDuplicates(list: List<Restaurant>): List<Restaurant> {
+        val distinctRestaurants = LinkedHashMap<String, Restaurant>()
+        for (restaurant in list) {
+            if (distinctRestaurants[restaurant.name] == null)
+                distinctRestaurants[restaurant.name] = restaurant
+        }
+        return ArrayList(distinctRestaurants.values)
+    }
+
+
+    fun favoriteRestaurants(restaurant: Restaurant) {
+        viewModelScope.launch {
+            if (restaurant.isFavorite) {
+                val removeRecipe = restaurant.apply { isFavorite = false }
+                removeRestaurantCase(removeRecipe)
+                _restaurants.value = LatestUiState.Success(restaurants)
             } else {
-                val favoritedRecipe = restaurants.copy(isFavorite = true)
-                favoriteRestaurantCase(favoritedRecipe)
+                val favoriteRecipe = restaurant.apply { isFavorite = true }
+                favoriteRestaurantCase(favoriteRecipe)
+                _restaurants.value = LatestUiState.Success(restaurants)
             }
         }
     }
@@ -70,30 +95,22 @@ class MainViewModel @ViewModelInject constructor(
         }
     }
 
-    fun sortListByOption(option: SortOption): List<Restaurant> {
+    fun sortListByOption(restaurants: List<Restaurant>, option: SortOption): List<Restaurant> {
         return when (option.option) {
-            AVERAGE_PRODUCT_PRICE -> restaurants.sortedWith(compareBy { it.sortingValues.averageProductPrice })
-            BEST_MATCH -> restaurants.sortedWith(compareBy { it.sortingValues.bestMatch })
-            NEWEST -> restaurants.sortedWith(compareBy { it.sortingValues.newest })
-            POPULARITY -> restaurants.sortedWith(compareBy { it.sortingValues.popularity })
-            MINIMUM_COST -> restaurants.sortedWith(compareBy { it.sortingValues.minCost })
-            DISTANCE -> restaurants.sortedWith(compareBy { it.sortingValues.distance })
-            RATING_AVERAGE -> restaurants.sortedWith(compareBy { it.sortingValues.ratingAverage })
+            AVERAGE_PRODUCT_PRICE -> restaurants.sortedByDescending { it.sortingValues.averageProductPrice }
+            BEST_MATCH -> restaurants.sortedByDescending { it.sortingValues.bestMatch }
+            NEWEST -> restaurants.sortedByDescending { it.sortingValues.newest }
+            POPULARITY -> restaurants.sortedByDescending { it.sortingValues.popularity }
+            MINIMUM_COST -> restaurants.sortedByDescending { it.sortingValues.minCost }
+            DISTANCE -> restaurants.sortedByDescending { it.sortingValues.distance }
+            RATING_AVERAGE -> restaurants.sortedByDescending { it.sortingValues.ratingAverage }
             else -> restaurants
         }
     }
 }
 
-//sealed class LatestUiState<out T : Any> {
-//    data class Success<out T : Any>(val restaurant: T) : LatestUiState<T>()
-//    object Loading : LatestUiState<Nothing>()
-//    object Empty : LatestUiState<Nothing>()
-//    data class Error(val exception: String) : LatestUiState<Nothing>()
-//}
-
 sealed class LatestUiState {
     data class Success(val restaurant: List<Restaurant>) : LatestUiState()
     object Loading : LatestUiState()
-    object Empty : LatestUiState()
     data class Error(val exception: String) : LatestUiState()
 }

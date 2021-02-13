@@ -8,15 +8,14 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class FilterRestaurantsUseCase @Inject constructor(
+class GetAllUsersFavoriteUseCase @Inject constructor(
     private val repository: RestaurantsRepository,
     private val postExecution: PostExecutorThread
-) : FlowUseCase<String, Result>() {
+) : FlowUseCase<Unit, Result>() {
     override val dispatcher: CoroutineDispatcher
         get() = postExecution.io
 
-    override fun execute(params: String?): Flow<Result> {
-        requireNotNull(params)
-        return repository.filterRestaurants(params)
+    override fun execute(params: Unit?): Flow<Result> {
+        return repository.getAllFavoriteRestaurants()
     }
 }

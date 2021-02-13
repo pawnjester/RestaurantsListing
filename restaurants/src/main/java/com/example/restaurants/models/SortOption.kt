@@ -11,7 +11,7 @@ data class SortOption(val option: String, var isSelected: Boolean = false) {
         const val POPULARITY = "Popularity"
         const val AVERAGE_PRODUCT_PRICE = "Average Product Price"
         const val DELIVERY_COST = "Delivery Costs"
-        const val MINIMUM_COST = "Min Cost"
+        const val MINIMUM_COST = "Minimum Cost"
 
         fun getSortItemsValue(): List<SortOption> {
             val items = mutableListOf<SortOption>()

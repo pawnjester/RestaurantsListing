@@ -13,3 +13,5 @@ fun getGreetingForTheDay(): CharSequence {
         else -> "Welcome!"
     }
 }
+
+fun <T> List<T>.toArrayList(): ArrayList<T> = ArrayList(this)

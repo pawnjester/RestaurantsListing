@@ -11,7 +11,7 @@ class RestaurantsProviderImpl @Inject constructor(
     @ApplicationContext val context: Context
 ) : RestaurantsProvider {
 
-    override suspend fun getRestaurants(): String {
+    override fun getRestaurants(): String {
         val inputStream: InputStream = this.context.assets.open("sample.json")
         val size: Int = inputStream.available()
         val buffer = ByteArray(size)

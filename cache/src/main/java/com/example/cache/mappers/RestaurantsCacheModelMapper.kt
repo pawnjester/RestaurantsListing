@@ -12,7 +12,7 @@ class RestaurantsCacheModelMapper @Inject constructor(
     override fun mapToModel(entity: RestaurantsEntity): RestaurantsCacheModel {
         return entity.run {
             RestaurantsCacheModel(
-                name = name, status = status, sortingValues = mapper.mapToModel(sortingValues)
+                name = name, status = status, sortingValues = mapper.mapToModel(sortingValues), isFavorite
             )
         }
     }
@@ -20,7 +20,7 @@ class RestaurantsCacheModelMapper @Inject constructor(
     override fun mapToEntity(model: RestaurantsCacheModel): RestaurantsEntity {
         return model.run {
             RestaurantsEntity(
-                name, status, mapper.mapToEntity(sortingValues)
+                name, status, mapper.mapToEntity(sortingValues), isFavorite
             )
         }
     }

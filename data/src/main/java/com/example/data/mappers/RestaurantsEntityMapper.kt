@@ -11,7 +11,7 @@ class RestaurantsEntityMapper @Inject constructor(
     override fun mapFromEntity(entity: RestaurantsEntity): Restaurant {
         return entity.run {
             Restaurant(
-                name, status, mapper.mapFromEntity(sortingValues)
+                name, status, mapper.mapFromEntity(sortingValues), isFavorite
             )
         }
     }
@@ -19,7 +19,7 @@ class RestaurantsEntityMapper @Inject constructor(
     override fun mapToEntity(domain: Restaurant): RestaurantsEntity {
         return domain.run {
             RestaurantsEntity(
-                name, status, mapper.mapToEntity(sortingValues)
+                name, status, mapper.mapToEntity(sortingValues), isFavorite
             )
         }
     }
