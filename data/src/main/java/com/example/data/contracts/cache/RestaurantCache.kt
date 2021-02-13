@@ -7,7 +7,10 @@ interface RestaurantCache {
 
     suspend fun favoriteRestaurant(restaurant: RestaurantsEntity)
 
-    suspend fun removeRestaurants(restaurant: RestaurantsEntity)
-
     fun getAllUserFavorites(): Flow<List<RestaurantsEntity>>
+
+    fun getAllRestaurants(): Flow<List<RestaurantsEntity>>
+
+    suspend fun saveRestaurants(list: List<RestaurantsEntity>)
+
 }

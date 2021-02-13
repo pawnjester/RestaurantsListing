@@ -6,7 +6,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.domain.model.Restaurant
-import com.example.domain.usecases.DeleteRestaurantUseCase
 import com.example.domain.usecases.FavoriteRestaurantsUseCase
 import com.example.domain.usecases.GetAllUsersFavoriteUseCase
 import com.example.domain.usecases.GetRestaurantsUseCase
@@ -18,16 +17,13 @@ import com.example.restaurants.models.SortOption.Companion.MINIMUM_COST
 import com.example.restaurants.models.SortOption.Companion.NEWEST
 import com.example.restaurants.models.SortOption.Companion.POPULARITY
 import com.example.restaurants.models.SortOption.Companion.RATING_AVERAGE
-import com.example.restaurants.utils.toArrayList
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import java.util.*
-import kotlin.collections.set
 
 class MainViewModel @ViewModelInject constructor(
     private val getRestaurantsCase: GetRestaurantsUseCase,
     private val favoriteRestaurantCase: FavoriteRestaurantsUseCase,
-    private val removeRestaurantCase: DeleteRestaurantUseCase,
     private val favoriteAllRestaurantsUseCase: GetAllUsersFavoriteUseCase
 ) : ViewModel() {
 
@@ -45,47 +41,17 @@ class MainViewModel @ViewModelInject constructor(
         viewModelScope.launch {
             getRestaurantsCase()
                 .collect {
-                    restaurants.addAll(it.restaurant)
-                }
-        }
-    }
-
-    fun getAllUsersRestaurants() {
-        viewModelScope.launch {
-            favoriteAllRestaurantsUseCase()
-                .collect {
-                    val favorites = it.restaurant.toArrayList()
-                    favorites.addAll(restaurants)
-                    val response = removeDuplicates(favorites)
                     restaurants.clear()
-                    restaurants.addAll(response)
-                    _restaurants.value = LatestUiState.Success(response)
-                    _restaurantsData.value = Pair(SortOption(BEST_MATCH), sortListByOption(response, SortOption(BEST_MATCH)))
+                    restaurants.addAll(it.restaurant)
+                    _restaurants.value = LatestUiState.Success(it.restaurant)
                 }
         }
     }
-
-    private fun removeDuplicates(list: List<Restaurant>): List<Restaurant> {
-        val distinctRestaurants = LinkedHashMap<String, Restaurant>()
-        for (restaurant in list) {
-            if (distinctRestaurants[restaurant.name] == null)
-                distinctRestaurants[restaurant.name] = restaurant
-        }
-        return ArrayList(distinctRestaurants.values)
-    }
-
 
     fun favoriteRestaurants(restaurant: Restaurant) {
         viewModelScope.launch {
-            if (restaurant.isFavorite) {
-                val removeRecipe = restaurant.apply { isFavorite = false }
-                removeRestaurantCase(removeRecipe)
-                _restaurants.value = LatestUiState.Success(restaurants)
-            } else {
-                val favoriteRecipe = restaurant.apply { isFavorite = true }
-                favoriteRestaurantCase(favoriteRecipe)
-                _restaurants.value = LatestUiState.Success(restaurants)
-            }
+            val favoriteRestaurant = restaurant.apply { isFavorite = !restaurant.isFavorite }
+            favoriteRestaurantCase(favoriteRestaurant)
         }
     }
 

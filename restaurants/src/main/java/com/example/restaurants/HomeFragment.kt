@@ -52,7 +52,6 @@ class HomeFragment : Fragment() {
         setupSortRecyclerView()
         sortingOptionAdapter.setOptions(SortOption.getSortItemsValue())
         viewModel.getRestaurants()
-        viewModel.getAllUsersRestaurants()
 
         val greeting = getGreetingForTheDay()
         binding.header.text = greeting
@@ -80,8 +79,6 @@ class HomeFragment : Fragment() {
 
         observe(viewModel.restaurantsResult, ::observeRestaurantsList)
         observe(viewModel.restaurantsDataResult, ::observeCurrentSelection)
-        setPreSelectedOption(SortOption(SortOption.BEST_MATCH))
-
     }
 
     private fun observeRestaurantsList(restaurants: LatestUiState?) {
@@ -133,12 +130,6 @@ class HomeFragment : Fragment() {
             )
             adapter = sortingOptionAdapter
         }
-    }
-
-    private fun setPreSelectedOption(option: SortOption) {
-//        val sortedRestaurantsList = viewModel.sortListByOption(option)
-//        restaurantsAdapter.setRestaurants(sortedRestaurantsList)
-//        sortingOptionAdapter.updateSortSelection(option)
     }
 
 

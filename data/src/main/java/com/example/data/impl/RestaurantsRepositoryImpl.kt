@@ -9,10 +9,7 @@ import com.example.domain.model.Restaurant
 import com.example.domain.model.Result
 import com.example.domain.repositories.RestaurantsRepository
 import com.google.gson.Gson
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.emitAll
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.*
 import javax.inject.Inject
 
 class RestaurantsRepositoryImpl @Inject constructor(
@@ -22,9 +19,8 @@ class RestaurantsRepositoryImpl @Inject constructor(
 ) : RestaurantsRepository {
 
     override fun getRestaurants(): Flow<Result> {
-        return flow {
-            val response = getAllRestaurants()
-            emit(Result(response))
+        return getAllRestaurants().map {
+            Result(it)
         }
     }
 
@@ -32,9 +28,6 @@ class RestaurantsRepositoryImpl @Inject constructor(
         restaurantCache.favoriteRestaurant(mapper.mapToEntity(restaurant))
     }
 
-    override suspend fun removeRestaurant(restaurant: Restaurant) {
-        restaurantCache.removeRestaurants(mapper.mapToEntity(restaurant))
-    }
 
     override fun getAllFavoriteRestaurants(): Flow<Result> {
         return flow {
@@ -45,10 +38,20 @@ class RestaurantsRepositoryImpl @Inject constructor(
         }
     }
 
-    private fun getAllRestaurants(): List<Restaurant> {
-        val restaurantsJson = restaurantsProvider.getRestaurants()
-        val data = Gson().fromJson(restaurantsJson, RestaurantsResponse::class.java)
-        return mapper.mapFromEntityList(data.restaurants)
+    private fun getAllRestaurants(): Flow<List<Restaurant>> {
+        val map: Flow<List<Restaurant>> = restaurantCache.getAllRestaurants().map {
+            if (it.isEmpty()) {
+                val restaurantsJson = restaurantsProvider.getRestaurants()
+                val data = Gson().fromJson(restaurantsJson, RestaurantsResponse::class.java)
+                restaurantCache.saveRestaurants(data.restaurants)
+                mapper.mapFromEntityList(data.restaurants)
+            } else {
+                mapper.mapFromEntityList(it)
+            }
+
+        }
+        return map
+
     }
 
 }

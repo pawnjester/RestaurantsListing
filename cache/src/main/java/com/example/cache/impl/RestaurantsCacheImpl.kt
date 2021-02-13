@@ -6,6 +6,7 @@ import com.example.data.contracts.cache.RestaurantCache
 import com.example.data.models.RestaurantsEntity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class RestaurantsCacheImpl @Inject constructor(
@@ -17,10 +18,6 @@ class RestaurantsCacheImpl @Inject constructor(
         dao.favoriteRestaurant(mapper.mapToModel(restaurant))
     }
 
-    override suspend fun removeRestaurants(restaurant: RestaurantsEntity) {
-        dao.removeRestaurant(mapper.mapToModel(restaurant))
-    }
-
     override fun getAllUserFavorites(): Flow<List<RestaurantsEntity>> {
         return flow {
             val models = dao.getAllUsersFavorite()
@@ -30,6 +27,19 @@ class RestaurantsCacheImpl @Inject constructor(
                 }
             )
         }
+    }
+
+    override fun getAllRestaurants(): Flow<List<RestaurantsEntity>> {
+
+        val models = dao.getAllRestaurants()
+        return models.map {
+            mapper.mapToEntityList(it)
+        }
+
+    }
+
+    override suspend fun saveRestaurants(list: List<RestaurantsEntity>) {
+        dao.saveRestaurants(mapper.mapToModelList(list))
     }
 
 

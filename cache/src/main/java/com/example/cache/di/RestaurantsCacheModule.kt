@@ -12,5 +12,5 @@ import dagger.hilt.components.SingletonComponent
 abstract class RestaurantsCacheModule {
 
     @Binds
-    abstract fun providesRestaurantsCache(recipeCacheImpl: RestaurantsCacheImpl): RestaurantCache
+    abstract fun providesRestaurantsCache(restaurantCacheImpl: RestaurantsCacheImpl): RestaurantCache
 }
