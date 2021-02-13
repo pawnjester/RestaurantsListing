@@ -9,7 +9,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.domain.model.Restaurant
 import com.example.restaurants.adapters.RestaurantsAdapter
 import com.example.restaurants.adapters.SortingOptionsAdapter
 import com.example.restaurants.databinding.FragmentHomeBinding
@@ -62,8 +61,7 @@ class HomeFragment : Fragment() {
         }
 
         sortingOptionAdapter.sortingOptionCallback = {
-            val sortedRestaurantsList = viewModel.sortListByOption(viewModel.restaurants, it)
-            restaurantsAdapter.setRestaurants(sortedRestaurantsList)
+            viewModel.sortListByOption(it)
             sortingOptionAdapter.updateSortSelection(it)
         }
 
@@ -78,7 +76,7 @@ class HomeFragment : Fragment() {
         }
 
         observe(viewModel.restaurantsResult, ::observeRestaurantsList)
-        observe(viewModel.restaurantsDataResult, ::observeCurrentSelection)
+        observe(viewModel.sortOption, ::observeSortOption)
     }
 
     private fun observeRestaurantsList(restaurants: LatestUiState?) {
@@ -96,10 +94,9 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun observeCurrentSelection(restaurants: Pair<SortOption, List<Restaurant>>?) {
-        restaurants?.let {
-            restaurantsAdapter.setRestaurants(it.second)
-            sortingOptionAdapter.updateSortSelection(it.first)
+    private fun observeSortOption(option: SortOption?) {
+        option?.let {
+            sortingOptionAdapter.updateSortSelection(it)
         }
     }
 

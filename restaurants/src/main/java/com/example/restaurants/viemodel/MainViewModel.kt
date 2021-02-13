@@ -7,16 +7,16 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.domain.model.Restaurant
 import com.example.domain.usecases.FavoriteRestaurantsUseCase
-import com.example.domain.usecases.GetAllUsersFavoriteUseCase
 import com.example.domain.usecases.GetRestaurantsUseCase
 import com.example.restaurants.models.SortOption
-import com.example.restaurants.models.SortOption.Companion.AVERAGE_PRODUCT_PRICE
-import com.example.restaurants.models.SortOption.Companion.BEST_MATCH
-import com.example.restaurants.models.SortOption.Companion.DISTANCE
-import com.example.restaurants.models.SortOption.Companion.MINIMUM_COST
-import com.example.restaurants.models.SortOption.Companion.NEWEST
-import com.example.restaurants.models.SortOption.Companion.POPULARITY
-import com.example.restaurants.models.SortOption.Companion.RATING_AVERAGE
+import com.example.domain.model.SortOptionsObject.AVERAGE_PRODUCT_PRICE
+import com.example.domain.model.SortOptionsObject.BEST_MATCH
+import com.example.domain.model.SortOptionsObject.DELIVERY_COST
+import com.example.domain.model.SortOptionsObject.DISTANCE
+import com.example.domain.model.SortOptionsObject.MINIMUM_COST
+import com.example.domain.model.SortOptionsObject.NEWEST
+import com.example.domain.model.SortOptionsObject.POPULARITY
+import com.example.domain.model.SortOptionsObject.RATING_AVERAGE
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import java.util.*
@@ -24,7 +24,6 @@ import java.util.*
 class MainViewModel @ViewModelInject constructor(
     private val getRestaurantsCase: GetRestaurantsUseCase,
     private val favoriteRestaurantCase: FavoriteRestaurantsUseCase,
-    private val favoriteAllRestaurantsUseCase: GetAllUsersFavoriteUseCase
 ) : ViewModel() {
 
 
@@ -33,8 +32,10 @@ class MainViewModel @ViewModelInject constructor(
 
     var restaurants = mutableListOf<Restaurant>()
 
-    private val _restaurantsData = MutableLiveData<Pair<SortOption, List<Restaurant>>>()
-    var restaurantsDataResult: LiveData<Pair<SortOption, List<Restaurant>>> = _restaurantsData
+    private val _sortOption = MutableLiveData<SortOption>()
+    var sortOption: LiveData<SortOption> = _sortOption
+
+    var sortBy: String = ""
 
 
     fun getRestaurants() {
@@ -43,7 +44,16 @@ class MainViewModel @ViewModelInject constructor(
                 .collect {
                     restaurants.clear()
                     restaurants.addAll(it.restaurant)
-                    _restaurants.value = LatestUiState.Success(it.restaurant)
+                    if (sortBy.isEmpty()) {
+                        if (restaurants.isNotEmpty()) {
+                            sortBy = BEST_MATCH
+                            _sortOption.value = SortOption(sortBy)
+                            val sortedRestaurants = restaurants.sortedByDescending { it.sortingValues.bestMatch }
+                            sortRestaurantsByDescending(sortedRestaurants)
+                        }
+                    } else {
+                        _restaurants.value = LatestUiState.Success(restaurants)
+                    }
                 }
         }
     }
@@ -61,8 +71,10 @@ class MainViewModel @ViewModelInject constructor(
         }
     }
 
-    fun sortListByOption(restaurants: List<Restaurant>, option: SortOption): List<Restaurant> {
-        return when (option.option) {
+
+    fun sortListByOption(option: SortOption) {
+        sortBy = option.option
+        val sortedRestaurants = when (sortBy) {
             AVERAGE_PRODUCT_PRICE -> restaurants.sortedByDescending { it.sortingValues.averageProductPrice }
             BEST_MATCH -> restaurants.sortedByDescending { it.sortingValues.bestMatch }
             NEWEST -> restaurants.sortedByDescending { it.sortingValues.newest }
@@ -70,9 +82,27 @@ class MainViewModel @ViewModelInject constructor(
             MINIMUM_COST -> restaurants.sortedByDescending { it.sortingValues.minCost }
             DISTANCE -> restaurants.sortedByDescending { it.sortingValues.distance }
             RATING_AVERAGE -> restaurants.sortedByDescending { it.sortingValues.ratingAverage }
+            DELIVERY_COST -> restaurants.sortedByDescending { it.sortingValues.deliveryCosts }
             else -> restaurants
         }
+        sortRestaurantsByDescending(sortedRestaurants)
     }
+
+    private fun sortRestaurantsByDescending(sortedRestaurants: List<Restaurant>) {
+        restaurants.clear()
+        restaurants.addAll(sortedRestaurants)
+        val sortedList = restaurants.sortedByDescending { it.isFavorite }
+        restaurants.clear()
+        restaurants.addAll(sortedList)
+        restaurants.forEach {
+            it.sortString = sortBy
+        }
+        _restaurants.value = LatestUiState.Success(restaurants)
+    }
+
+
+
+
 }
 
 sealed class LatestUiState {

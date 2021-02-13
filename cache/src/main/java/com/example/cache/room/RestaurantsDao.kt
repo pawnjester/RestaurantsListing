@@ -17,7 +17,7 @@ interface RestaurantsDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun saveRestaurants(restaurants: List<RestaurantsCacheModel>)
 
-    @Query("select * from $TABLE_NAME")
+    @Query("select * from $TABLE_NAME ORDER BY isFavorite DESC")
     fun getAllRestaurants(): Flow<List<RestaurantsCacheModel>>
 
 }

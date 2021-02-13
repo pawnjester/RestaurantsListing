@@ -21,7 +21,7 @@ class RestaurantsViewHolder(
         item.run {
             binding.restaurantsName.text = name
             binding.restaurantsStatus.text = status.capitalize(Locale.ROOT)
-            binding.restaurantsAveragePrice.text = sortingValues.averageProductPrice.toString()
+            binding.restaurantsAveragePrice.text = "${sortString}: ${displaySortValue()} "
             binding.restaurantsStatus.setTextColor(setStatusColor(item.status))
             binding.favoriteRestaurants.setImageDrawable(iconDrawable)
         }

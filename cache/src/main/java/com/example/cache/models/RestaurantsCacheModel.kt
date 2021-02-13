@@ -10,7 +10,7 @@ data class RestaurantsCacheModel(
     val name: String,
     val status: String,
     val sortingValues: SortingValuesCacheModel,
-    var isFavorite: Boolean = false
+    var isFavorite: Boolean = false,
 ) {
     companion object {
         const val TABLE_NAME = "restaurants"
