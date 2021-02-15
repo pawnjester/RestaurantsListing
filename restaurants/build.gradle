@@ -98,6 +98,7 @@ dependencies {
             testDependencies.truth,
             testDependencies.archCoreTest,
             testDependencies.mockitoKotlin,
+            testDependencies.mockito,
             testDependencies.coroutinesTest,
             testDependencies.konveyor,
             presentationDependencies.testDependencies.jUnit,
