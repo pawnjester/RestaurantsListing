@@ -41,6 +41,8 @@ dependencies {
     def cacheDependencies = rootProject.ext
     def remoteDependencies = rootProject.ext.remoteDependencies
     def uiDependencies = rootProject.ext.uiDependencies
+    def testDependencies = rootProject.ext.testDependencies
+    def presentationDependencies = rootProject.ext
     implementation(
             appDependencies.kotlin,
             appDependencies.androidKtx,
@@ -63,4 +65,38 @@ dependencies {
     kapt appDependencies.daggerCompiler
     kapt appDependencies.daggerXcompiler
     kapt cacheDependencies.roomDependencies.roomCompiler
+
+    androidTestImplementation(
+            presentationDependencies.testDependencies.espresso,
+
+            testDependencies.espressoContrib,
+            testDependencies.fragmentTesting,
+            testDependencies.rules,
+            testDependencies.testRunner,
+            testDependencies.archCoreTest,
+            testDependencies.hiltTesting,
+            testDependencies.truth,
+
+
+    )
+
+    kaptAndroidTest(
+            presentationDependencies.appDependencies.daggerXcompiler,
+            presentationDependencies.appDependencies.daggerCompiler,
+    )
+
+    testImplementation(
+            testDependencies.truth,
+            testDependencies.archCoreTest,
+            testDependencies.mockitoKotlin,
+            testDependencies.mockito,
+            testDependencies.coroutinesTest,
+            testDependencies.konveyor,
+            presentationDependencies.testDependencies.jUnit,
+            presentationDependencies.testDependencies.roboelectric,
+            presentationDependencies.testDependencies.jUnitX,
+            presentationDependencies.appDependencies.coroutines,
+
+
+    )
 }

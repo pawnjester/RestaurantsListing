@@ -11,8 +11,6 @@ import com.example.domain.model.SortOptionsObject.RATING_AVERAGE
 
 
 data class SortOption(val option: String, var isSelected: Boolean = false) {
-
-
     companion object {
         fun getSortItemsValue(): List<SortOption> {
             val items = mutableListOf<SortOption>()
@@ -26,6 +24,5 @@ data class SortOption(val option: String, var isSelected: Boolean = false) {
             items.add(SortOption(MINIMUM_COST))
             return items
         }
-
     }
 }

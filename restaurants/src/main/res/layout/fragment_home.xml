@@ -15,6 +15,7 @@
         android:textColor="@color/colorTundora"
         android:textSize="20sp"
         android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="Welcome!" />
@@ -37,17 +38,21 @@
     <EditText
         android:id="@+id/search_restaurants_edit_text"
         android:layout_width="0dp"
-        android:layout_height="60dp"
+        android:layout_height="50dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:drawablePadding="8dp"
         android:background="@drawable/bg_search_edit_text"
         android:drawableStart="@drawable/ic_search"
+        android:drawablePadding="8dp"
         android:hint="@string/search_restaurants_by_name"
+        android:padding="6dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/filter_restaurants"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/restaurants_count" />
+        app:layout_constraintTop_toBottomOf="@+id/restaurants_count"
+        app:layout_constraintVertical_bias="0.0" />
 
     <ImageView
         android:id="@+id/filter_restaurants"
@@ -63,22 +68,17 @@
         android:id="@+id/sort_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:orientation="vertical"
         android:layout_marginStart="8dp"
+        android:layout_marginTop="5dp"
         android:layout_marginEnd="8dp"
-        android:visibility="gone"
+        android:orientation="vertical"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/search_restaurants_edit_text">
-
-        <TextView
-            android:id="@+id/sort_by_header"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/sort_by_text"
-            android:textColor="@color/colorTundora"
-            android:textStyle="bold" />
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@+id/search_restaurants_edit_text"
+        app:layout_constraintTop_toBottomOf="@+id/search_restaurants_edit_text"
+        app:layout_constraintVertical_bias="0.0">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_sort"
@@ -102,9 +102,10 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="16dp"
-        android:paddingBottom="180dp"
+        android:paddingBottom="220dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/divider"
-        tools:listitem="@layout/item_restaurants"
-        />
+        tools:listitem="@layout/item_restaurants" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

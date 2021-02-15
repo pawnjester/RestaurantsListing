@@ -5,7 +5,6 @@ import com.example.cache.room.RestaurantsDao
 import com.example.data.contracts.cache.RestaurantCache
 import com.example.data.models.RestaurantsEntity
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
@@ -16,17 +15,6 @@ class RestaurantsCacheImpl @Inject constructor(
 
     override suspend fun favoriteRestaurant(restaurant: RestaurantsEntity) {
         dao.favoriteRestaurant(mapper.mapToModel(restaurant))
-    }
-
-    override fun getAllUserFavorites(): Flow<List<RestaurantsEntity>> {
-        return flow {
-            val models = dao.getAllUsersFavorite()
-            emit(
-                models.map {
-                    mapper.mapToEntity(it)
-                }
-            )
-        }
     }
 
     override fun getAllRestaurants(): Flow<List<RestaurantsEntity>> {

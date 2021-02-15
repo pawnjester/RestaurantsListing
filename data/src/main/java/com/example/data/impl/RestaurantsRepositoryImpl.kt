@@ -28,16 +28,6 @@ class RestaurantsRepositoryImpl @Inject constructor(
         restaurantCache.favoriteRestaurant(mapper.mapToEntity(restaurant))
     }
 
-
-    override fun getAllFavoriteRestaurants(): Flow<Result> {
-        return flow {
-            val response: Flow<List<RestaurantsEntity>> = restaurantCache.getAllUserFavorites()
-            emitAll(response.map {
-                Result(mapper.mapFromEntityList(it))
-            })
-        }
-    }
-
     private fun getAllRestaurants(): Flow<List<Restaurant>> {
         val map: Flow<List<Restaurant>> = restaurantCache.getAllRestaurants().map {
             if (it.isEmpty()) {

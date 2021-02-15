@@ -28,6 +28,13 @@ data class Restaurant(
             else -> sortingValues.deliveryCosts
         }
         return sortValue.toString()
+    }
 
+    fun getRestaurantStatus() : Int {
+        return when (status) {
+            OPEN -> 3
+            ORDER_AHEAD -> 2
+            else -> 1
+        }
     }
 }

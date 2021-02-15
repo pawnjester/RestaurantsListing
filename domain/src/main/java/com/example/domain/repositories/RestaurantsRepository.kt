@@ -10,6 +10,4 @@ interface RestaurantsRepository {
 
     suspend fun favoriteRestaurant(restaurant: Restaurant)
 
-    fun getAllFavoriteRestaurants() : Flow<Result>
-
 }

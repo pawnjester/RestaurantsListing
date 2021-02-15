@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.domain.model.Restaurant
 import com.example.restaurants.adapters.RestaurantsAdapter
 import com.example.restaurants.adapters.SortingOptionsAdapter
 import com.example.restaurants.databinding.FragmentHomeBinding
@@ -16,6 +17,7 @@ import com.example.restaurants.models.SortOption
 import com.example.restaurants.utils.MarginItemDecoration
 import com.example.restaurants.utils.getGreetingForTheDay
 import com.example.restaurants.utils.observe
+import com.example.restaurants.utils.show
 import com.example.restaurants.viemodel.LatestUiState
 import com.example.restaurants.viemodel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -79,7 +81,7 @@ class HomeFragment : Fragment() {
         observe(viewModel.sortOption, ::observeSortOption)
     }
 
-    private fun observeRestaurantsList(restaurants: LatestUiState?) {
+    private fun observeRestaurantsList(restaurants: LatestUiState<List<Restaurant>>?) {
         restaurants?.let {
             when (it) {
                 is LatestUiState.Loading -> {
@@ -87,8 +89,6 @@ class HomeFragment : Fragment() {
                 is LatestUiState.Success -> {
                     restaurantsAdapter.setRestaurants(it.restaurant)
                     binding.restaurantsCount.text = requireContext().getString(R.string.restaurant_count, it.restaurant.size)
-                }
-                is LatestUiState.Error -> {
                 }
             }
         }
@@ -103,9 +103,9 @@ class HomeFragment : Fragment() {
 
     private fun toggleSortLayout() {
         if (binding.sortLayout.visibility == View.VISIBLE) {
-            binding.sortLayout.visibility = View.GONE
+            binding.sortLayout.show(false)
         } else {
-            binding.sortLayout.visibility = View.VISIBLE
+            binding.sortLayout.show(true)
         }
     }
 

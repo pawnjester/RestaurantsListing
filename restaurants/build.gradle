@@ -16,8 +16,7 @@ android {
         versionCode rootProject.ext.versionCode
         versionName rootProject.ext.versionName
 
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        consumerProguardFiles "consumer-rules.pro"
+        testInstrumentationRunner "com.example.restaurants.CustomTestRunner"
     }
 
     buildTypes {
@@ -63,7 +62,6 @@ dependencies {
             presentationDependencies.uiDependencies.androidLegacy,
             presentationDependencies.uiDependencies.appCompat,
             presentationDependencies.uiDependencies.liveData,
-            presentationDependencies.uiDependencies.coil,
             presentationDependencies.uiDependencies.shimmer,
 
             project(":core"),
@@ -86,6 +84,9 @@ dependencies {
             testDependencies.archCoreTest,
             testDependencies.hiltTesting,
             testDependencies.truth,
+            testDependencies.jUnitX,
+            testDependencies.androidXTest,
+            testDependencies.androidXTestCore,
     )
 
     kaptAndroidTest(
