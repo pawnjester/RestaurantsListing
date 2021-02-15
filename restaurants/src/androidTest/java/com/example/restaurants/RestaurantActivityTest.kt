@@ -41,7 +41,7 @@ class RestaurantActivityTest {
     }
 
     @Test
-    fun show_show_data_when_search_is_performed() {
+    fun should_show_data_when_search_is_performed() {
         launchFragmentInHiltContainer<HomeFragment>()
         onView(withId(R.id.search_restaurants_edit_text)).perform(ViewActions.typeText("Tanoshii Sushi"))
         onView(withId(R.id.rv_restaurants)).check(RecyclerViewItemCountAssertion(1));

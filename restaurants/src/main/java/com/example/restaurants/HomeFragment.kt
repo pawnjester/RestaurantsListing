@@ -74,7 +74,8 @@ class HomeFragment : Fragment() {
         binding.searchRestaurantsEditText.doOnTextChanged { text, _, _, _ ->
             val filteredRestaurants = viewModel.filterByName(text.toString())
             restaurantsAdapter.setRestaurants(filteredRestaurants)
-            binding.restaurantsCount.text = requireContext().getString(R.string.restaurant_count, filteredRestaurants.size)
+            val sizeText = if (filteredRestaurants.isEmpty()) getString(R.string.no_restaurant) else resources.getQuantityString(R.plurals.numberOfOrders, filteredRestaurants.size, filteredRestaurants.size)
+            binding.restaurantsCount.text = sizeText
         }
 
         observe(viewModel.restaurantsResult, ::observeRestaurantsList)
@@ -94,7 +95,8 @@ class HomeFragment : Fragment() {
                     binding.shimmerRecycler.show(false)
                     binding.rvRestaurants.show(true)
                     restaurantsAdapter.setRestaurants(it.restaurant)
-                    binding.restaurantsCount.text = requireContext().getString(R.string.restaurant_count, it.restaurant.size)
+                    val sizeText = if (it.restaurant.isEmpty()) getString(R.string.no_restaurant) else resources.getQuantityString(R.plurals.numberOfOrders, it.restaurant.size, it.restaurant.size)
+                    binding.restaurantsCount.text = sizeText
                 }
             }
         }
