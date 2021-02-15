@@ -18,6 +18,7 @@ import com.example.domain.usecases.FavoriteRestaurantsUseCase
 import com.example.domain.usecases.GetRestaurantsUseCase
 import com.example.restaurants.models.SortOption
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 import java.util.*
 
@@ -39,10 +40,12 @@ class MainViewModel @ViewModelInject constructor(
 
     fun getRestaurants() {
         viewModelScope.launch {
-            getRestaurantsCase()
-                .collect {
+            getRestaurantsCase().onStart {
+                _restaurants.value = LatestUiState.Loading
+            }
+                .collect { result ->
                     restaurants.clear()
-                    restaurants.addAll(it.restaurant)
+                    restaurants.addAll(result.restaurant)
                     if (sortBy.isEmpty()) {
                         if (restaurants.isNotEmpty()) {
                             sortBy = BEST_MATCH

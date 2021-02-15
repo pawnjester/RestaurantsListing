@@ -85,8 +85,14 @@ class HomeFragment : Fragment() {
         restaurants?.let {
             when (it) {
                 is LatestUiState.Loading -> {
+                    binding.shimmerRecycler.show(true)
+                    binding.shimmerRecycler.startShimmer()
+                    binding.rvRestaurants.show(false)
                 }
                 is LatestUiState.Success -> {
+                    binding.shimmerRecycler.stopShimmer()
+                    binding.shimmerRecycler.show(false)
+                    binding.rvRestaurants.show(true)
                     restaurantsAdapter.setRestaurants(it.restaurant)
                     binding.restaurantsCount.text = requireContext().getString(R.string.restaurant_count, it.restaurant.size)
                 }
