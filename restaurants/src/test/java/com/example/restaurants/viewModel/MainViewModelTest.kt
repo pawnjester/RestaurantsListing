@@ -3,13 +3,11 @@ package com.example.restaurants.viewModel
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
 import com.example.domain.model.Restaurant
-import com.example.domain.repositories.RestaurantsRepository
 import com.example.domain.usecases.FavoriteRestaurantsUseCase
 import com.example.domain.usecases.GetRestaurantsUseCase
 import com.example.restaurants.models.SortOption
 import com.example.restaurants.viemodel.LatestUiState
 import com.example.restaurants.viemodel.MainViewModel
-import com.example.restaurants.viewModel.dummy.DummyData
 import com.example.restaurants.viewModel.dummy.DummyData.makeOrderedRestaurantDomainList
 import com.example.restaurants.viewModel.dummy.DummyData.makeRestaurantDomainList
 import com.example.restaurants.viewModel.dummy.DummyData.makeRestaurantDomainModel
