@@ -3,6 +3,7 @@ package com.example.restaurants
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.filters.LargeTest
@@ -19,7 +20,7 @@ import org.junit.runner.RunWith
 @HiltAndroidTest
 @RunWith(AndroidJUnit4ClassRunner::class)
 @ExperimentalCoroutinesApi
-class RestaurantActivityTest {
+class HomeFragmentTest {
 
     @get:Rule
     var hiltRule = HiltAndroidRule(this)
@@ -45,6 +46,13 @@ class RestaurantActivityTest {
         launchFragmentInHiltContainer<HomeFragment>()
         onView(withId(R.id.search_restaurants_edit_text)).perform(ViewActions.typeText("Tanoshii Sushi"))
         onView(withId(R.id.rv_restaurants)).check(RecyclerViewItemCountAssertion(1));
+    }
+
+    @Test
+    fun should_show_no_available_restaurants_when_wrong_data_is_searched() {
+        launchFragmentInHiltContainer<HomeFragment>()
+        onView(withId(R.id.search_restaurants_edit_text)).perform(ViewActions.typeText("kdskdk"))
+        onView(withId(R.id.restaurants_count)).check(matches(ViewMatchers.withText("No restaurants available")))
     }
 
 }

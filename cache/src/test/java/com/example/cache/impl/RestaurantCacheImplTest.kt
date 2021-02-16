@@ -47,7 +47,7 @@ class RestaurantCacheImplTest {
     }
 
     @Test
-    fun `check that fav`() = runBlocking {
+    fun `check that favorite Restaurant method`() = runBlocking {
         val entityList = makeRestaurantEntityList(2)
         val entity = makeRestaurantEntityModel()
         val editedEntity = entity.apply { isFavorite = true }
