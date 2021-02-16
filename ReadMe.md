@@ -36,7 +36,7 @@ This app is a simple application that retrieves a list of restaurants from a jso
     - Restaurants (This is main UI layer)
 
 ## How to make use of the app
-- Clone this repo.
+- Clone this repo and run on an android device.
 - This app requires a minimum sdk of 24
 
 ## How to run test
