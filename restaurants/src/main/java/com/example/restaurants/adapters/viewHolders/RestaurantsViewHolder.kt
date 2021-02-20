@@ -30,15 +30,9 @@ class RestaurantsViewHolder(
 
     private fun setStatusColor(status: String): Int {
         return when (status) {
-            Restaurant.CLOSED -> {
-                itemView.resources.getColor(R.color.colorPrimaryDark, null)
-            }
-            Restaurant.OPEN -> {
-                itemView.resources.getColor(R.color.colorAccent, null)
-            }
-            else -> {
-                itemView.resources.getColor(R.color.colorTundora, null)
-            }
+            Restaurant.CLOSED -> itemView.resources.getColor(R.color.colorPrimaryDark, null)
+            Restaurant.OPEN -> itemView.resources.getColor(R.color.colorAccent, null)
+            else -> itemView.resources.getColor(R.color.colorTundora, null)
         }
     }
 

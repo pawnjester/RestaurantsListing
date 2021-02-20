@@ -63,7 +63,7 @@ class HomeFragment : Fragment() {
         }
 
         sortingOptionAdapter.sortingOptionCallback = {
-            viewModel.sortListByOption(it)
+            viewModel.sortList(it)
             sortingOptionAdapter.updateSortSelection(it)
         }
 

@@ -47,32 +47,18 @@ class MainViewModel @ViewModelInject constructor(
                     restaurants.clear()
                     restaurants.addAll(result.restaurant)
                     if (sortBy.isEmpty()) {
-                        if (restaurants.isNotEmpty()) {
-                            sortBy = BEST_MATCH
-                            _sortOption.value = SortOption(sortBy)
-                            val sortedRestaurants = restaurants.sortedByDescending { it.sortingValues.bestMatch }
-                            sortRestaurantsByDescending(sortedRestaurants)
-                        }
+                        sortBy = BEST_MATCH
+                        _sortOption.value = SortOption(sortBy)
+                        val sortedList = restaurants.sortedByDescending { it.sortingValues.bestMatch }
+                        sortByDescending(sortedList)
                     } else {
-                        val favorites = mutableListOf<Restaurant>()
-                        val notFavorites = mutableListOf<Restaurant>()
-                        restaurants.map {
-                            if (it.isFavorite) favorites.add(it) else notFavorites.add(it)
-                        }
-                        val sortedFavorites = favorites.sortedByDescending { it.getRestaurantStatus() }
-                        val notSortedFavorites = notFavorites.sortedByDescending { it.getRestaurantStatus() }
-                        val totalList = listOf(sortedFavorites, notSortedFavorites)
-                        val orderedList = totalList.flatten()
-                        restaurants.clear()
-                        restaurants.addAll(orderedList)
-                        sortListByOption(SortOption(sortBy))
-                        _restaurants.value = LatestUiState.Success(restaurants)
+                        sortList(SortOption(sortBy))
                     }
                 }
         }
     }
 
-    fun sortListByOption(option: SortOption) {
+    fun sortList(option: SortOption) {
         sortBy = option.option
         val sortedRestaurants = when (sortBy) {
             AVERAGE_PRODUCT_PRICE -> restaurants.sortedByDescending { it.sortingValues.averageProductPrice }
@@ -85,17 +71,15 @@ class MainViewModel @ViewModelInject constructor(
             DELIVERY_COST -> restaurants.sortedByDescending { it.sortingValues.deliveryCosts }
             else -> restaurants
         }
-        sortRestaurantsByDescending(sortedRestaurants)
+        sortByDescending(sortedRestaurants)
     }
 
-    private fun sortRestaurantsByDescending(sortedRestaurants: List<Restaurant>) {
+    private fun sortByDescending(sortedRestaurants: List<Restaurant>) {
         val favorites = mutableListOf<Restaurant>()
         val notFavorites = mutableListOf<Restaurant>()
+        val list = sortedRestaurants.sortedBy { it.getRestaurantStatus() }
         restaurants.clear()
-        restaurants.addAll(sortedRestaurants)
-        val sortedList = restaurants.sortedByDescending { it.isFavorite }
-        restaurants.clear()
-        restaurants.addAll(sortedList)
+        restaurants.addAll(list)
         restaurants.map {
             if (it.isFavorite) favorites.add(it) else notFavorites.add(it)
         }
