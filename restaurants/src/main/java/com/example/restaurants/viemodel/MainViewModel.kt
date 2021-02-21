@@ -77,7 +77,7 @@ class MainViewModel @ViewModelInject constructor(
     private fun sortByDescending(sortedRestaurants: List<Restaurant>) {
         val favorites = mutableListOf<Restaurant>()
         val notFavorites = mutableListOf<Restaurant>()
-        val list = sortedRestaurants.sortedBy { it.getRestaurantStatus() }
+        val list = sortedRestaurants.sortedByDescending { it.getRestaurantStatus() }
         restaurants.clear()
         restaurants.addAll(list)
         restaurants.map {
