@@ -1,10 +1,6 @@
 package com.example.restaurants.viemodel
 
-import androidx.hilt.lifecycle.ViewModelInject
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.example.domain.model.Restaurant
 import com.example.domain.model.SortOptionsObject.AVERAGE_PRODUCT_PRICE
 import com.example.domain.model.SortOptionsObject.BEST_MATCH
@@ -17,26 +13,30 @@ import com.example.domain.model.SortOptionsObject.RATING_AVERAGE
 import com.example.domain.usecases.FavoriteRestaurantsUseCase
 import com.example.domain.usecases.GetRestaurantsUseCase
 import com.example.restaurants.models.SortOption
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 import java.util.*
+import javax.inject.Inject
 
-class MainViewModel @ViewModelInject constructor(
+@HiltViewModel
+class MainViewModel @Inject constructor(
     private val getRestaurantsCase: GetRestaurantsUseCase,
     private val favoriteRestaurantCase: FavoriteRestaurantsUseCase,
+    private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
 
     private val _restaurants = MutableLiveData<LatestUiState<List<Restaurant>>>()
     var restaurantsResult: LiveData<LatestUiState<List<Restaurant>>> = _restaurants
 
-    var restaurants = mutableListOf<Restaurant>()
+    private var restaurants = mutableListOf<Restaurant>()
 
     private val _sortOption = MutableLiveData<SortOption>()
     var sortOption: LiveData<SortOption> = _sortOption
 
-    var sortBy: String = ""
+    private var sortBy: String = ""
 
     fun getRestaurants() {
         viewModelScope.launch {
