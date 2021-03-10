@@ -1,6 +1,5 @@
 package com.example.restaurants.viemodel
 
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -17,26 +16,34 @@ import com.example.domain.model.SortOptionsObject.RATING_AVERAGE
 import com.example.domain.usecases.FavoriteRestaurantsUseCase
 import com.example.domain.usecases.GetRestaurantsUseCase
 import com.example.restaurants.models.SortOption
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 import java.util.*
+import javax.inject.Inject
 
-class MainViewModel @ViewModelInject constructor(
+@HiltViewModel
+class MainViewModel @Inject constructor(
     private val getRestaurantsCase: GetRestaurantsUseCase,
-    private val favoriteRestaurantCase: FavoriteRestaurantsUseCase,
+    private val favoriteRestaurantCase: FavoriteRestaurantsUseCase
 ) : ViewModel() {
 
 
     private val _restaurants = MutableLiveData<LatestUiState<List<Restaurant>>>()
     var restaurantsResult: LiveData<LatestUiState<List<Restaurant>>> = _restaurants
 
-    var restaurants = mutableListOf<Restaurant>()
+    private var restaurants = mutableListOf<Restaurant>()
 
     private val _sortOption = MutableLiveData<SortOption>()
     var sortOption: LiveData<SortOption> = _sortOption
 
-    var sortBy: String = ""
+    private var sortBy: String = ""
+
+
+    init {
+        getRestaurants()
+    }
 
     fun getRestaurants() {
         viewModelScope.launch {
@@ -77,7 +84,7 @@ class MainViewModel @ViewModelInject constructor(
     private fun sortByDescending(sortedRestaurants: List<Restaurant>) {
         val favorites = mutableListOf<Restaurant>()
         val notFavorites = mutableListOf<Restaurant>()
-        val list = sortedRestaurants.sortedBy { it.getRestaurantStatus() }
+        val list = sortedRestaurants.sortedByDescending { it.getRestaurantStatus() }
         restaurants.clear()
         restaurants.addAll(list)
         restaurants.map {
@@ -102,10 +109,15 @@ class MainViewModel @ViewModelInject constructor(
         }
     }
 
-    fun filterByName(name: String): List<Restaurant> {
-        return restaurants.filter { restaurant ->
+    fun filterByName(name: String) {
+        val restaurantsList = restaurants.filter { restaurant ->
             restaurant.name.toLowerCase(Locale.getDefault()).contains(name.toLowerCase(Locale.getDefault()))
         }
+        _restaurants.value = LatestUiState.Success(restaurantsList)
+    }
+
+    fun setSelectedSortOption(option: SortOption) {
+        _sortOption.value = option
     }
 }
 
