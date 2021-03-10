@@ -52,7 +52,6 @@ class HomeFragment : Fragment() {
         setupRecyclerView()
         setupSortRecyclerView()
         sortingOptionAdapter.setOptions(SortOption.getSortItemsValue())
-        viewModel.getRestaurants()
 
         val greeting = getGreetingForTheDay()
         binding.header.text = greeting
@@ -63,6 +62,7 @@ class HomeFragment : Fragment() {
         }
 
         sortingOptionAdapter.sortingOptionCallback = {
+            viewModel.setSelectedSortOption(it)
             viewModel.sortList(it)
             sortingOptionAdapter.updateSortSelection(it)
         }
@@ -72,8 +72,7 @@ class HomeFragment : Fragment() {
         }
 
         binding.searchRestaurantsEditText.doOnTextChanged { text, _, _, _ ->
-            val filteredRestaurants: List<Restaurant> = viewModel.filterByName(text.toString())
-            setDataView(filteredRestaurants)
+            viewModel.filterByName(text.toString())
         }
 
         observe(viewModel.restaurantsResult, ::observeRestaurantsList)
@@ -100,7 +99,8 @@ class HomeFragment : Fragment() {
 
     private fun setDataView(list: List<Restaurant>) {
         restaurantsAdapter.setRestaurants(list)
-        val sizeText = if (list.isEmpty()) getString(R.string.no_restaurant) else resources.getQuantityString(R.plurals.numberOfOrders, list.size, list.size)
+        val sizeText = if (list.isEmpty()) getString(R.string.no_restaurant)
+        else resources.getQuantityString(R.plurals.numberOfOrders, list.size, list.size)
         binding.restaurantsCount.text = sizeText
     }
 

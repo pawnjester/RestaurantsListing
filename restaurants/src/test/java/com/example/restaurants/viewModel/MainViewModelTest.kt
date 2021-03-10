@@ -2,7 +2,6 @@ package com.example.restaurants.viewModel
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
-import androidx.lifecycle.SavedStateHandle
 import com.example.domain.model.Restaurant
 import com.example.domain.usecases.FavoriteRestaurantsUseCase
 import com.example.domain.usecases.GetRestaurantsUseCase
@@ -40,9 +39,6 @@ class MainViewModelTest {
     private lateinit var sortObserver: Observer<SortOption>
 
     @Mock
-    private lateinit var savedState: SavedStateHandle
-
-    @Mock
     private lateinit var uiObserver: Observer<LatestUiState<List<Restaurant>>>
 
     @Captor
@@ -61,8 +57,7 @@ class MainViewModelTest {
 
         sut = MainViewModel(
             getRestaurantsCase,
-            favoriteRestaurantCase,
-            savedState
+            favoriteRestaurantCase
         )
     }
 

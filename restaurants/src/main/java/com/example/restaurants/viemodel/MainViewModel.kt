@@ -1,6 +1,9 @@
 package com.example.restaurants.viemodel
 
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.domain.model.Restaurant
 import com.example.domain.model.SortOptionsObject.AVERAGE_PRODUCT_PRICE
 import com.example.domain.model.SortOptionsObject.BEST_MATCH
@@ -23,8 +26,7 @@ import javax.inject.Inject
 @HiltViewModel
 class MainViewModel @Inject constructor(
     private val getRestaurantsCase: GetRestaurantsUseCase,
-    private val favoriteRestaurantCase: FavoriteRestaurantsUseCase,
-    private val savedStateHandle: SavedStateHandle
+    private val favoriteRestaurantCase: FavoriteRestaurantsUseCase
 ) : ViewModel() {
 
 
@@ -37,6 +39,11 @@ class MainViewModel @Inject constructor(
     var sortOption: LiveData<SortOption> = _sortOption
 
     private var sortBy: String = ""
+
+
+    init {
+        getRestaurants()
+    }
 
     fun getRestaurants() {
         viewModelScope.launch {
@@ -102,10 +109,15 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    fun filterByName(name: String): List<Restaurant> {
-        return restaurants.filter { restaurant ->
+    fun filterByName(name: String) {
+        val restaurantsList = restaurants.filter { restaurant ->
             restaurant.name.toLowerCase(Locale.getDefault()).contains(name.toLowerCase(Locale.getDefault()))
         }
+        _restaurants.value = LatestUiState.Success(restaurantsList)
+    }
+
+    fun setSelectedSortOption(option: SortOption) {
+        _sortOption.value = option
     }
 }
 

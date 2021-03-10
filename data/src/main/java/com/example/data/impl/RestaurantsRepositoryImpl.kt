@@ -3,13 +3,13 @@ package com.example.data.impl
 import com.example.data.contracts.cache.RestaurantCache
 import com.example.data.contracts.provider.RestaurantsProvider
 import com.example.data.mappers.RestaurantsEntityMapper
-import com.example.data.models.RestaurantsEntity
 import com.example.data.models.RestaurantsResponse
 import com.example.domain.model.Restaurant
 import com.example.domain.model.Result
 import com.example.domain.repositories.RestaurantsRepository
 import com.google.gson.Gson
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class RestaurantsRepositoryImpl @Inject constructor(
@@ -29,7 +29,7 @@ class RestaurantsRepositoryImpl @Inject constructor(
     }
 
     private fun getAllRestaurants(): Flow<List<Restaurant>> {
-        val map: Flow<List<Restaurant>> = restaurantCache.getAllRestaurants().map {
+        return restaurantCache.getAllRestaurants().map {
             if (it.isEmpty()) {
                 val restaurantsJson = restaurantsProvider.getRestaurants()
                 val data = Gson().fromJson(restaurantsJson, RestaurantsResponse::class.java)
@@ -40,7 +40,6 @@ class RestaurantsRepositoryImpl @Inject constructor(
             }
 
         }
-        return map
 
     }
 
