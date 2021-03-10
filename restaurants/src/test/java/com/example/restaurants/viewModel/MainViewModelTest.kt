@@ -62,12 +62,6 @@ class MainViewModelTest {
     }
 
     @Test
-    fun `test filter by name returns a list of restaurants `() {
-        val result = sut.filterByName("flavour restaurant")
-        assertThat(result).isEqualTo(listOf<Restaurant>())
-    }
-
-    @Test
     fun `check that first flow for getRestaurants`() {
         sut.sortOption.observeForever(sortObserver)
         val result = com.example.domain.model.Result(makeRestaurantDomainList())
@@ -91,7 +85,7 @@ class MainViewModelTest {
             }
         )
         sut.getRestaurants()
-        Mockito.verify(uiObserver, times(2)).onChanged(captorUI.capture())
+        Mockito.verify(uiObserver, times(3)).onChanged(captorUI.capture())
         assertThat(captorUI.value).isEqualTo(LatestUiState.Success(makeOrderedRestaurantDomainList()))
     }
 
